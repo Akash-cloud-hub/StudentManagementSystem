@@ -1,9 +1,8 @@
 """
 Routes and views for the flask application.
 """
-
 from datetime import datetime
-from flask import render_template
+from flask import render_template , request , redirect , url_for
 from flask_sqlalchemy import SQLAlchemy
 from StudentManagementSystem import app
 
@@ -22,7 +21,15 @@ def index():
     students = Student.query.all()
     return render_template('index.html', students = students)
 
-if __name__=='__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True)
+
+@app.route('/add',methods = ['GET','POST'])
+def add_student():
+    if request.method == 'POST':
+        name = request.form['name']
+        age = request.form['age']
+        
+        student = Student(name = name , age = age)
+        db.session.add(student)
+        db.session.commit()
+        return redirect(url_for('index'))
+    return render_template('add.html')
