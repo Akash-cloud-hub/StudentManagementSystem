@@ -8,6 +8,10 @@ from StudentManagementSystem import app
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///students.db'
 
+# servername = 'ABCIS-210013\SQLEXPRESS'
+# dbname = 'Students'
+# engine = create_engine('mssql+pyodbc://@' + servername + '/' + dbname + '?trusted_connection=yes&driver=ODBC+Driver+17+for+SQL+Server')
+
 db = SQLAlchemy(app)
 
 class Student(db.Model):
@@ -33,3 +37,23 @@ def add_student():
         db.session.commit()
         return redirect(url_for('index'))
     return render_template('add.html')
+
+@app.route('/edit/<int:id>',methods = ['GET','POST'])
+def edit_studnet(id):
+    students = Student.query.get(id)
+    
+    if request.method == 'POST':
+        students.name = request.form['name']
+        students.age = request.form['age']
+        #no need to add it into the database again commit() will save the changes
+        db.session.commit()        
+        return redirect(url_for('index')) # 'index' calls for index()
+    
+    return render_template('edit.html',student = students)
+
+@app.route('/delete/<int:id>',methods = ['GET'])
+def delete_student(id):
+    students = Student.query.get(id)
+    db.session.delete(students)
+    db.session.commit()
+    return redirect(url_for('index'))

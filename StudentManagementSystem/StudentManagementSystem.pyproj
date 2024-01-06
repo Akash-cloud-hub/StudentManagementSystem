@@ -67,6 +67,9 @@
     <Content Include="StudentManagementSystem\templates\add.html">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="StudentManagementSystem\templates\edit.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="StudentManagementSystem\templates\index.html" />
   </ItemGroup>
   <ItemGroup>
